@@ -1,0 +1,85 @@
+package com.example.PC_Builder.controller;
+
+import com.example.PC_Builder.entity.Role;
+import com.example.PC_Builder.entity.User;
+import com.example.PC_Builder.dto.LoginDto;
+import com.example.PC_Builder.dto.SignUpDto;
+import com.example.PC_Builder.respository.UserRepository;
+import com.example.PC_Builder.respository.RoleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Collections;
+
+
+import java.util.Collections;
+
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @PostMapping("/signin")
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginDto loginDto) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginDto.getUsernameOrEmail(),
+                        loginDto.getPassword()
+                )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return ResponseEntity.ok(Collections.singletonMap("message", "User signed-in successfully."));
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<?> registerUser(@RequestBody SignUpDto signUpDto) {
+        if (userRepository.existsByUsername(signUpDto.getUsername())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(Collections.singletonMap("message", "Username is already taken!"));
+        }
+
+        if (userRepository.existsByEmail(signUpDto.getEmail())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(Collections.singletonMap("message", "Email is already taken!"));
+        }
+
+        // Create new user's account
+        User user = new User();
+        user.setName(signUpDto.getName());
+        user.setUsername(signUpDto.getUsername());
+        user.setEmail(signUpDto.getEmail());
+        user.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
+
+        Role userRole = roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+        user.setRoles(Collections.singleton(userRole));
+
+        userRepository.save(user);
+
+        return ResponseEntity.ok(Collections.singletonMap("message", "User registered successfully!"));
+    }
+}
