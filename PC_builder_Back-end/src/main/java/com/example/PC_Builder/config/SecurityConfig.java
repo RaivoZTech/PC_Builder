@@ -49,7 +49,7 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/register").permitAll() // Allow access to login and register pages
                         .requestMatchers(HttpMethod.POST, "/api/auth/signup", "/api/auth/signin").permitAll() // Allow POST requests to signup and signin
                         .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll() // Example: Allow all GET requests to paths under '/api/public/'
-                        .anyRequest().authenticated() // All other requests should be authenticated
+                        .anyRequest().permitAll()
                 )
         // .httpBasic() or .formLogin() - Depending on how you want to handle login authentication
         ;

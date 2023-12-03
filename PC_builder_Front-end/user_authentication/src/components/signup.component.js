@@ -6,7 +6,8 @@ export default class SignUp extends Component {
     name: '',
     username: '',
     email: '',
-    password: ''
+    password: '',
+    errorMessage: ''
   };
 
   handleChange = (e) => {
@@ -15,6 +16,7 @@ export default class SignUp extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+    this.setState({ errorMessage: '' }); // Clear any existing error message
     try {
       const { name, username, email, password } = this.state;
       const response = await axios.post('http://localhost:8080/api/auth/signup', { name, username, email, password });
@@ -22,7 +24,14 @@ export default class SignUp extends Component {
       // Handle response / redirect
     } catch (error) {
       console.error('Signup error', error.response);
-      // Handle error
+      this.setState({ 
+        errorMessage: error.response?.data?.message || 'Username or email alredy exists.',
+        // Reset form fields
+        name: '',
+        username: '',
+        email: '',
+        password: ''
+      });
     }
   };
 
@@ -30,6 +39,13 @@ export default class SignUp extends Component {
     return (
       <form onSubmit={this.handleSubmit}>
         <h3>Sign Up</h3>
+
+         {/* Display error message */}
+         {this.state.errorMessage && (
+          <div className="alert alert-danger" role="alert">
+            {this.state.errorMessage}
+          </div>
+        )}
         <div className="mb-3">
           <label>Name</label>
           <input
@@ -37,6 +53,7 @@ export default class SignUp extends Component {
             className="form-control"
             placeholder="Name"
             name="name"
+            value={this.state.name}
             onChange={this.handleChange}
           />
         </div>
@@ -47,6 +64,7 @@ export default class SignUp extends Component {
             className="form-control" 
             placeholder="Last name"
             name="username"
+            value={this.state.username}
             onChange={this.handleChange} 
           />
         </div>
@@ -57,6 +75,7 @@ export default class SignUp extends Component {
             className="form-control"
             placeholder="Enter email"
             name="email"
+            value={this.state.email}
             onChange={this.handleChange}
           />
         </div>
@@ -67,6 +86,7 @@ export default class SignUp extends Component {
             className="form-control"
             placeholder="Enter password"
             name="password"
+            value={this.state.password}
             onChange={this.handleChange}
           />
         </div>
