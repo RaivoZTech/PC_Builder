@@ -1,4 +1,4 @@
-package com.example.PC_Builder.controller;
+/*package com.example.PC_Builder.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,4 +15,4 @@ public class WebController {
     public String showRegistrationForm() {
         return "register";  // Maps to src/main/resources/templates/register.html
     }
-}
+}*/
