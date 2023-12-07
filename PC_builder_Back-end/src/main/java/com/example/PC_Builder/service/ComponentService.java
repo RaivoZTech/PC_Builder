@@ -12,10 +12,24 @@ public class ComponentService {
 
     @Autowired
     public ComponentService(ComponentRepository repository){
+
         this.componentRepository = repository;
     }
 
     public List<Components> getComponentsByType(String type) {
+
         return componentRepository.findByType(type);
+    }
+
+    public Components addComponent(Components component) {
+        return componentRepository.save(component);
+    }
+    public void deleteComponent(Long id) {
+        componentRepository.deleteById(id);
+    }
+
+
+    public List<Components> getAllComponents() {
+        return componentRepository.findAll();
     }
 }
