@@ -94,7 +94,7 @@ class Builder extends Component {
                                 [componentType]: false
                             }
                         }));
-                    }, 2000); // Clears the flag after 1 second
+                    }, 2000);
                 });
             }
         };
