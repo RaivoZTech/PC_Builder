@@ -37,6 +37,10 @@ export default class SignUp extends Component {
 
   render() {
     return (
+      <div className="d-flex align-items-center justify-content-center min-vh-50">
+      <div className="col-md-6 col-lg-4 mx-auto">
+        <div className="bg-light rounded-4 py-5 px-4 px-md-5">
+        <div className="custom-form-container">
       <form onSubmit={this.handleSubmit}>
         <h3>Sign Up</h3>
 
@@ -62,7 +66,7 @@ export default class SignUp extends Component {
           <input 
             type="text" 
             className="form-control" 
-            placeholder="Last name"
+            placeholder="Username"
             name="username"
             value={this.state.username}
             onChange={this.handleChange} 
@@ -96,6 +100,10 @@ export default class SignUp extends Component {
           </button>
         </div>
       </form>
+      </div>
+      </div>
+      </div>
+      </div>
     )
   }
 }

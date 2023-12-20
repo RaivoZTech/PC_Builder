@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +24,8 @@ import java.util.Collections;
 
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -50,7 +53,17 @@ public class AuthController {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return ResponseEntity.ok(Collections.singletonMap("message", "User signed-in successfully."));
+
+        // Fetch the authenticated user from the database
+        User authenticatedUser = userRepository.findByUsernameOrEmail(loginDto.getUsernameOrEmail(), loginDto.getUsernameOrEmail())
+                .orElseThrow(() ->
+                        new UsernameNotFoundException("User not found with username or email: " + loginDto.getUsernameOrEmail()));
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "User signed-in successfully.");
+        response.put("username", authenticatedUser.getUsername());
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/signup")
