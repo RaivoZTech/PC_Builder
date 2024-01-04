@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Navigate } from 'react-router-dom';
 
 export default class SignUp extends Component {
   state = {
@@ -7,7 +8,9 @@ export default class SignUp extends Component {
     username: '',
     email: '',
     password: '',
-    errorMessage: ''
+    errorMessage: '',
+    redirectToLogin: false,
+    showSignupModal: false // State for showing the modal
   };
 
   handleChange = (e) => {
@@ -19,23 +22,42 @@ export default class SignUp extends Component {
     this.setState({ errorMessage: '' }); // Clear any existing error message
     try {
       const { name, username, email, password } = this.state;
-      const response = await axios.post('http://localhost:8080/api/auth/signup', { name, username, email, password });
-      console.log(response.data);
-      // Handle response / redirect
+      await axios.post('http://localhost:8080/api/auth/signup', { name, username, email, password });
+      // Trigger the modal display
+      this.setState({ showSignupModal: true });
+      setTimeout(() => {
+        this.setState({ redirectToLogin: true });
+      }, 3000); // Redirect to login after 3 seconds
     } catch (error) {
       console.error('Signup error', error.response);
       this.setState({ 
-        errorMessage: error.response?.data?.message || 'Username or email alredy exists.',
-        // Reset form fields
-        name: '',
-        username: '',
-        email: '',
-        password: ''
+        errorMessage: error.response?.data?.message || 'Username or email already exists.'
       });
     }
   };
 
+  renderSignupModal() {
+    if (!this.state.showSignupModal) {
+      return null;
+    }
+
+    return (
+      <div className="save-build-modal-backdrop">
+        <div className="save-build-modal-content">
+          <div className="modal-header">Registration Successful</div>
+          <div className="modal-body">
+            Your account has been created successfully. Redirecting to login page...
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   render() {
+    // Redirect to login page when registration is successful
+    if (this.state.redirectToLogin) {
+      return <Navigate to="/sign-in" />;
+    }
     return (
       <div className="d-flex align-items-center justify-content-center min-vh-50">
       <div className="col-md-6 col-lg-4 mx-auto">
@@ -43,7 +65,6 @@ export default class SignUp extends Component {
         <div className="custom-form-container">
       <form onSubmit={this.handleSubmit}>
         <h3>Sign Up</h3>
-
          {/* Display error message */}
          {this.state.errorMessage && (
           <div className="alert alert-danger" role="alert">
@@ -103,6 +124,7 @@ export default class SignUp extends Component {
       </div>
       </div>
       </div>
+      {this.renderSignupModal()}
       </div>
     )
   }

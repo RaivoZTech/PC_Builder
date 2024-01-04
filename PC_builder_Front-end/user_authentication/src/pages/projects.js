@@ -141,8 +141,9 @@ class Projects extends Component {
     
 
     render() {
-        const { isLoading, error } = this.state;
-
+        const { isLoading, error, builds } = this.state;
+        const hasBuilds = builds.length > 0;
+    
         return (
             <div className="d-flex flex-column h-100 bg-light">
                 <NavBarMain />
@@ -156,6 +157,11 @@ class Projects extends Component {
                                 <div className="col-lg-11 col-xl-9 col-xxl-8">
                                     {isLoading ? <p>Loading builds...</p> : this.renderBuilds()}
                                     {error && <p className="text-danger">{error.message}</p>}
+                                    {!hasBuilds && !isLoading && (
+                                        <div className="alert alert-info">
+                                            You haven't built anything yet.
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
