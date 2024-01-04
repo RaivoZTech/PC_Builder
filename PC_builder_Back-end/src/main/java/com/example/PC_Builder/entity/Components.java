@@ -18,3 +18,4 @@ public class Components {
     private String specs;
     private Double price;
 }
+

@@ -21,10 +21,16 @@ class Login extends Component {
     try {
       const { usernameOrEmail, password } = this.state;
       const response = await axios.post('http://localhost:8080/api/auth/signin', { usernameOrEmail, password });
-      console.log(response.data);
+      console.log("Response data:", response.data);
 
       // Check if login was successful
       if (response.status === 200) {
+        // Store user ID in local storage (assuming response.data contains the user ID)
+        localStorage.setItem('userId', response.data.userId);
+        localStorage.setItem('username', response.data.username);
+        console.log("Username stored:", response.data.username);
+
+
         // Set isLoggedIn to true to indicate that the user is logged in
         this.setState({ isLoggedIn: true });
 
@@ -41,14 +47,13 @@ class Login extends Component {
         password: ''
       });
     }
-  };
+};
 
   render() {
     // Check if the user is logged in, and if so, navigate to the home page
     if (this.state.isLoggedIn) {
       return <Navigate to="/homepage" />;
     }
-
     return (
       <div className="d-flex align-items-center justify-content-center min-vh-50">
       <div className="col-md-6 col-lg-4 mx-auto">

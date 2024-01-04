@@ -1,6 +1,6 @@
 package com.example.PC_Builder.entity;
 import com.example.PC_Builder.entity.Components;
-import lombok.Data;
+import lombok.*;
 import jakarta.persistence.*;
 
 
@@ -23,4 +23,40 @@ public class PCBuild {
             joinColumns = @JoinColumn(name = "pcbuild_id"),
             inverseJoinColumns = @JoinColumn(name = "component_id"))
     private List<Components> components;
+
+    private String imageUrl; // Field for storing image URL
+
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Components> getComponents() {
+        return components;
+    }
+
+    public void setComponents(List<Components> components) {
+        this.components = components;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
 }

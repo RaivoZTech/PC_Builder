@@ -4,10 +4,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/login.component';
 import SignUp from './components/signup.component';
 import HomePage from './pages/HomePage';
-import Resume from './pages/resume';
 import Projects from './pages/projects';
-import Builder from './pages/builder';
 import NavBarAuth from './components/NavBarAuth';
+import Logout from './components/logout.componenet';
+import TechNews from './pages/technews';
+import BuildPC from './pages/buildPC';
 
 function App() {
   return (
@@ -19,9 +20,10 @@ function App() {
           <Route path="/sign-up" element={<><NavBarAuth /><SignUp /></>} />
           <Route path="/sign-in" element={<><NavBarAuth /><Login /></>} />
           <Route path='/homepage' element={<><HomePage /></>} />
-          <Route path='/resume' element={<><Resume/></>} />
+          <Route path='/technews' element={<><TechNews/></>} />
           <Route path='/projects' element={<><Projects/></>} />
-          <Route path='/builder' element={<><Builder/></>} />
+          <Route path='/buildPC' element={<><BuildPC/></>} />
+          <Route path="/logout" element={<Logout />} />
         </Routes>
       </div>
     </Router>
