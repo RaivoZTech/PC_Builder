@@ -1,4 +1,5 @@
 import React from "react"
+import { Link } from "react-router-dom";
 function NavBarMain() {
 
     const username = localStorage.getItem('username') || 'User';
@@ -8,9 +9,9 @@ function NavBarMain() {
         <div>
             <nav className="navbar navbar-expand-lg navbar-light bg-white py-3">
             <div className="container px-5">
-                <div className="navbar-brand">
-                    <span className="fw-bolder text-primary">PC Builder & Compatibility Checker</span>
-                </div>
+            <Link className="navbar-brand" to="/homepage">
+            <span className="fw-bolder text-primary">PC Builder & Compatibility Checker</span>
+          </Link>
                 <div className="flex-grow-1 d-flex justify-content-center">
                     <span style={{ fontSize: 'small' }}><b className="text-gradient d-inline">Welcome, {username}!</b></span>
                 </div>

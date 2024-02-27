@@ -31,20 +31,20 @@ import java.util.Map;
 @RequestMapping("/api/auth")
 public class AuthController {
 
+    // Autowiring necessary components
     @Autowired
     private AuthenticationManager authenticationManager;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private RoleRepository roleRepository;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    // Endpoint for user sign-in
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginDto loginDto) {
+        // Authenticate the user based on username/email and password
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginDto.getUsernameOrEmail(),
@@ -52,6 +52,7 @@ public class AuthController {
                 )
         );
 
+        // Set the authentication in the security context
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // Fetch the authenticated user from the database
@@ -59,6 +60,7 @@ public class AuthController {
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found with username or email: " + loginDto.getUsernameOrEmail()));
 
+        // Preparing the response
         Map<String, Object> response = new HashMap<>();
         response.put("message", "User signed-in successfully.");
         response.put("username", authenticatedUser.getUsername());
@@ -67,14 +69,17 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    // Endpoint for user registration
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignUpDto signUpDto) {
+        // Check if the username already exists
         if (userRepository.existsByUsername(signUpDto.getUsername())) {
             return ResponseEntity
                     .badRequest()
                     .body(Collections.singletonMap("message", "Username is already taken!"));
         }
 
+        // Check if the email already exists
         if (userRepository.existsByEmail(signUpDto.getEmail())) {
             return ResponseEntity
                     .badRequest()
@@ -88,12 +93,15 @@ public class AuthController {
         user.setEmail(signUpDto.getEmail());
         user.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
 
+        // Assign default role to the user
         Role userRole = roleRepository.findByName("ROLE_USER")
                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
         user.setRoles(Collections.singleton(userRole));
 
+        // Save the user in the database
         userRepository.save(user);
 
         return ResponseEntity.ok(Collections.singletonMap("message", "User registered successfully!"));
     }
 }
+

@@ -10,12 +10,16 @@ import lombok.Data;
 public class Components {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String type;
-    private String name;
+    private Long id; // Primary key for the component
+
+    private String type; // Type of the component (e.g., CPU, GPU)
+
+    private String name; // Name of the component
 
     @Column(columnDefinition = "TEXT")
-    private String specs;
-    private Double price;
+    private String specs; // Detailed specifications of the component, stored as text
+
+    private Double price; // Price of the component
 }
+
 

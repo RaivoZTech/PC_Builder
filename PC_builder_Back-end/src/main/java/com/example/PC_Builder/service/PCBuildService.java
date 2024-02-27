@@ -10,9 +10,6 @@ import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.json.JSONObject;
-import lombok.*;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -162,7 +159,7 @@ public class    PCBuildService {
         }
 
 
-        // Storage Device - Motherboard Interface Compatibility Check
+        // Storage - Motherboard Interface Compatibility Check
         if (componentSpecs.containsKey("SSD") && componentSpecs.containsKey("Motherboard")) {
             JSONObject ssd = componentSpecs.get("SSD");
             JSONObject motherboard = componentSpecs.get("Motherboard");
@@ -194,7 +191,7 @@ public class    PCBuildService {
 
         }
 
-
+    // Helper method to parse dimensions from a string
     private int parseDimension(String dimension) {
         try {
             Pattern pattern = Pattern.compile("\\d+");
@@ -208,11 +205,12 @@ public class    PCBuildService {
         return -1;
     }
 
-
+    // Method to save a new PC build
     public PCBuild savePCBuild(BuildDto buildRequest) {
+        // Find user based on user ID from the build request
         User user = userRepository.findById(buildRequest.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
+        // Retrieve components based on IDs from the build request
         List<Components> components = componentRepository.findByIdIn(buildRequest.getComponentIds());
 
         PCBuild pcBuild = new PCBuild();
@@ -244,11 +242,14 @@ public class    PCBuildService {
         }
         return pcBuildRepository.save(pcBuild);
     }
+
+    // Method to retrieve all builds associated with a specific user
     public List<PCBuild> getBuildsByUserId(Long userId) {
+        // Retrieve and return the list of PC builds for the given user ID
         return pcBuildRepository.findByUserId(userId);
     }
 
-
+    // Method to update the image URL of a specific build
     public PCBuild updateBuildImage(Long buildId, String imageUrl) {
         PCBuild pcBuild = getPCBuildById(buildId);
         pcBuild.setImageUrl(imageUrl);

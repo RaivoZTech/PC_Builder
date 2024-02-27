@@ -11,7 +11,7 @@ import java.util.List;
 public class PCBuild {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; // Primary key for the PC build
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -22,9 +22,9 @@ public class PCBuild {
             name = "pcbuild_components",
             joinColumns = @JoinColumn(name = "pcbuild_id"),
             inverseJoinColumns = @JoinColumn(name = "component_id"))
-    private List<Components> components;
+    private List<Components> components; // List of components associated with build.
 
-    private String imageUrl; // Field for storing image URL
+    private String imageUrl; // Field for storing image URL of the build
 
     // Getters and Setters
     public Long getId() {
