@@ -1,8 +1,9 @@
+//Import statements
 import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import NavBarMain from '../components/NavBarMain';
 import Footer from '../components/Footer';
-
+//Tech news function to fetch news trough API
 function TechNews() {
     const [news, setNews] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
