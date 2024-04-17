@@ -33,7 +33,7 @@ class Projects extends Component {
             this.setState({ error: error, isLoading: false });
         }
     };
-
+//Function to calculate total price of the builds 
     calculateTotalPrice = (components) => {
         return components.reduce((total, component) => total + component.price, 0);
     };
